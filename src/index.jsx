@@ -3,6 +3,16 @@ import PropTypes from 'prop-types';
 
 import Select from 'react-select';
 
+class FixedSelect extends Select {
+  handleMenuScroll (event) {
+    if (!this.props.onMenuScrollToBottom) return;
+    let { target } = event;
+    if (target.scrollHeight > target.offsetHeight && (target.scrollHeight - target.offsetHeight - target.scrollTop) <= 1) {
+      this.props.onMenuScrollToBottom();
+    }
+  }
+}
+
 const initialCache = {
   options: [],
   hasMore: true,
@@ -136,7 +146,7 @@ class AsyncPaginate extends Component {
     const currentOptions = optionsCache[search] || initialCache;
 
     return (
-      <Select
+      <FixedSelect
         {...this.props}
         onClose={this.onClose}
         onOpen={this.onOpen}
